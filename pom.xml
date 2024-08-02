@@ -161,33 +161,38 @@
                         <id>rename-file</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>copy</goal>
+                            <goal>rename</goal>
                         </goals>
                         <configuration>
-                            <sourceFile>${project.build.directory}/${project.artifactId}-${project.version}-runner.jar</sourceFile>
+                            <sourceFile>${stagingDirectory}/${project.artifactId}-${project.version}-runner.jar</sourceFile>
                             <destinationFile>${stagingDirectory}/${project.artifactId}-${project.version}.jar</destinationFile>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <!-- Delete .jar file as runner.jar took its place -->
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
                 <version>3.1.0</version>
                 <executions>
                     <execution>
-                        <id>delete-file</id>
                         <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
-                            <filesets>
-                                <fileset>
-                                    <file>${stagingDirectory}/${project.artifactId}-${project.version}-runner.jar</file>
-                                </fileset>
-                            </filesets>
+                            <target>
+                                <zip destfile="${project.build.directory}/dist/azure-function.jar">
+                                    <fileset dir="${stagingDirectory}">
+                                        <include name="**/**"/>
+                                        <exclude name="lib/**"/>
+                                    </fileset>
+                                </zip>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>            
+            </plugin>
         </plugins>
     </build>
 </project>

@@ -41,3 +41,7 @@ nb-configuration.xml
 
 # Plugin directory
 /.quarkus/cli/plugins/
+
+# terraform/infra
+.azure/dev/infra/**/**
+infra/terraform/**
